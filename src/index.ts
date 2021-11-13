@@ -68,7 +68,7 @@ const handleRoomsFromAdapter = async (path: string, room: any, id: string) => {
     const player2Ref = allInQueue.filter(e => e.id === rooms[0][1].id)
     if(!!player1Ref && !!player1Ref.length && player1Ref.length > 0 && !!player2Ref && !!player2Ref.length && player2Ref.length > 0){
       player1Ref[0].emit('roomFound', {roomId: 'some id', adversary: player2Ref[0].data})
-      player1Ref[0].emit('roomFound', {roomId: 'some id', adversary: player1Ref[0].data})
+      player2Ref[0].emit('roomFound', {roomId: 'some id', adversary: player1Ref[0].data})
     }
   }
   // const playerRef = allInQueue.filter(e => e.id === id)
