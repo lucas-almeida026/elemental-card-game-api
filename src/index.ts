@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  console.log(`new user connected with id ${socket.id}`)
+  console.log(`new user connected with id ${socket.id} a`)
 })
 
 server.listen(port, () => console.log(`socket listening as port ${port}`))
