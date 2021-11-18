@@ -1,3 +1,5 @@
+import { IDeck } from "./card";
+
 export type Player = {
   id: string,
   data: {
@@ -5,4 +7,10 @@ export type Player = {
     rankPoints: number,
     decks: any[]
   }
+}
+
+export interface IAdversary {
+  nickname: string,
+  rankPoints: number,
+  decks: IDeck[]
 }

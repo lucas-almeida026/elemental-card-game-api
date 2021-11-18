@@ -1,0 +1,1 @@
+export type Classes = 'fire' | 'water' | 'wind' | 'earth' | 'shadow'

@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io"
-import { Player } from "./interfaces/player"
+import { BanAdversaryDeckEvent, DeckBan } from "./interfaces/events"
+import { IAdversary, Player } from "./interfaces/player"
 import { Room } from "./interfaces/room"
 import { makeId } from "./utils"
 
@@ -43,17 +44,21 @@ const onAcceptMatch = (io: Server, socket: Socket, roomId: string) => {
   }
 }
 
+const onBanAdversaryDeck = async ({adversary, deckName, roomId}: BanAdversaryDeckEvent, io: Server) => {
+  const adversarySocketRef = (await io.of('/').in(roomId).fetchSockets()).filter(e => e.data.nickname === adversary.nickname)
+  if(!!adversarySocketRef && adversarySocketRef.length > 0){
+    const socket = adversarySocketRef[0]
+    socket.emit('deckBan', {deckName, roomId} as DeckBan)
+  }
+}
+
 export const onConnect = (socket: Socket, io: Server) => {
   console.log(`new user connected with id ${socket.id} a`)
   socket.on('joinQueue', (data) => onJoinQueue(socket, data))
   socket.on('leaveQueue', () => onLeaveQueue(socket))
   socket.on('acceptMacth', (roomId) => onAcceptMatch(io, socket, roomId))
+  socket.on('banAdversaryDeck', (data: BanAdversaryDeckEvent) => onBanAdversaryDeck(data, io))
 }
-
-
-
-
-
 
 
 
@@ -70,7 +75,6 @@ const matchPlayers = (players: Player[], maxDiff = 0): Player[][] | null => {
 }
 
 export const handleRoomsFromAdapter = async (io: Server, path: string, room: any, id: string) => {
-  // const allInQueue = await io.of(path).in(room).fetchSockets()
   const allInQueue = await getAllPlayersInQueue(io)
   const allPlayers = allInQueue.map(e => ({data: e.data, id: e.id}) as Player)
   const rooms = matchPlayers(allPlayers)

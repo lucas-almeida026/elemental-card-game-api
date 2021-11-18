@@ -1,0 +1,1 @@
+export type CardRarity = 'c' | 'r' | 'l' | 'm'
